@@ -43,20 +43,20 @@ export function hasIntersection(first: Range, second: Range): boolean {
  * A range collection is an aggregate of these ranges: [1, 5), [10, 11), [100, 201)
  */
 export class RangeCollection {
-  private readonly collection: Array<Range>;
+  private readonly collection: Range[];
 
-  constructor(value?: Range | Array<Range>) {
+  constructor(value?: Range | Range[]) {
     if (!Array.isArray(value)) {
       this.collection = [];
       return;
     }
 
     if (Array.isArray(value[0])) {
-      for (let range of value) {
+      for (const range of value) {
         validateRange(range as Range);
       }
       // todo - use add to consistently create collection
-      this.collection = value as Array<Range>;
+      this.collection = value as Range[];
     } else {
       validateRange(value as Range);
       this.collection = [value as Range];
@@ -67,7 +67,7 @@ export class RangeCollection {
    * Adds a range to the collection
    * @param {Range} value - Array of two integers that specify beginning and end of range.
    */
-  add(value: Range): void {
+  public add(value: Range): void {
     validateRange(value);
     if (value[0] === value[1]) {
       return;
@@ -120,7 +120,7 @@ export class RangeCollection {
    * Removes a range from the collection
    * @param {Range} value - Array of two integers that specify beginning and end of range.
    */
-  remove(value: Range): void {
+  public remove(value: Range): void {
     validateRange(value);
     if (value[0] === value[1]) {
       return;
@@ -131,7 +131,7 @@ export class RangeCollection {
    * @return {string} - the list of ranges in the range collection
    * @example [1, 5), [10, 11), [100, 201)
    */
-  toString(): string {
+  public toString(): string {
     return this.collection
       .map(range => `[${range[0]}, ${range[1]})`)
       .join(", ");
@@ -140,7 +140,8 @@ export class RangeCollection {
   /**
    * Prints into console the list of ranges in the range collection
    */
-  print(): void {
+  public print(): void {
+    // tslint:disable-next-line:no-console
     console.log(this.toString());
   }
 }

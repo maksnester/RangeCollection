@@ -1,4 +1,4 @@
-import { Range, hasIntersection, RangeCollection } from './RangeCollection'
+import { hasIntersection, Range, RangeCollection } from './RangeCollection'
 
 describe("RangeCollection test suite", () => {
   it("Should create collection with or without initial value", () => {
@@ -107,7 +107,7 @@ describe("RangeCollection test suite", () => {
     expect(rc.toString()).toBe("");
   });
 
-  describe('hasIntersection tests', function() {
+  describe('hasIntersection tests', () => {
     it('should be true if one range include another', () => {
       const r: Range = [0, 3]
       expect(hasIntersection(r, [0, 3])).toBe(true)
