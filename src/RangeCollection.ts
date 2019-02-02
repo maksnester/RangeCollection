@@ -37,6 +37,10 @@ export function hasIntersection(first: Range, second: Range): boolean {
   return true;
 }
 
+export function getLength(range: Range) {
+  return range[1] - range[0]
+}
+
 /**
  *
  * A pair of integers define a range  [1, 5). This range includes integers: 1, 2, 3, and 4.
@@ -122,8 +126,39 @@ export class RangeCollection {
    */
   public remove(value: Range): void {
     validateRange(value);
-    if (value[0] === value[1]) {
+    if (value[0] === value[1] || !this.collection.length) {
       return;
+    }
+    for (let i = 0; i < this.collection.length; i++) {
+      const start = this.collection[i][0]
+      const end = this.collection[i][1]
+      if (start >= value[1]) {
+        break
+      }
+      if (end <= value[0] || !hasIntersection(value, this.collection[i])) {
+        continue
+      }
+      if (start >= value[0] && end <= value[1]) {
+        const newRange: Range = [value[1] + 1, end]
+        if (getLength(newRange) > 1) {
+          this.collection[i][0] = newRange[0]
+        } else {
+          this.collection.splice(i, 1)
+          i--
+        }
+      } else if (start < value[0]) {
+        if (end <= value[1]) {
+          this.collection[i][1] = value[0]
+        } else {
+          const newRange: Range = [value[1], this.collection[i][1]]
+          if (getLength(newRange) >= 1) {
+            this.collection.splice(i + 1, 0, newRange)
+          }
+          this.collection[i][1] = value[0]
+        }
+      } else if (start >= value[0]) {
+        this.collection[i][0] = value[1]
+      }
     }
   }
 
