@@ -32,9 +32,9 @@ export function hasIntersection(first: Range, second: Range): boolean {
   const start = 0;
   const end = 1;
   if (second[start] > first[end] || first[start] > second[end]) {
-    return false
+    return false;
   }
-  return true
+  return true;
 }
 
 /**
@@ -85,42 +85,34 @@ export class RangeCollection {
       return;
     }
 
-    // insert between existing ranges
-    let insertAfter = -1;
-    for (let i = 0; i < this.collection.length - 1; i++) {
-      if (
-        this.collection[i][1] < value[0] &&
-        this.collection[i + 1][0] > value[1]
-      ) {
-        insertAfter = i;
-      }
-    }
-    if (insertAfter > -1) {
-      this.collection.splice(insertAfter + 1, 0, value);
-      return;
-    }
-
-    // modify existing ranges because of intersection
-    let insertInsteadOf = -1;
     let rangesToDelete = 0;
     let newRange: Range = [value[0], value[1]];
+    let insertionIndex = -1;
     for (let i = 0; i < this.collection.length; i++) {
-      if (hasIntersection(this.collection[i], newRange)) {
+      if (
+        this.collection[i][1] < value[0] &&
+        this.collection[i + 1] &&
+        this.collection[i + 1][0] > value[1]
+      ) {
+        // we won't replace anything for that case
+        // will just add new record after found range
+        insertionIndex = i + 1;
+      } else if (hasIntersection(this.collection[i], newRange)) {
         const minStart = Math.min(this.collection[i][0], newRange[0]);
         const maxEnd = Math.max(this.collection[i][1], newRange[1]);
         newRange = [minStart, maxEnd];
         rangesToDelete++;
-        if (insertInsteadOf === -1) {
-          insertInsteadOf = i;
+        if (insertionIndex === -1) {
+          insertionIndex = i;
         }
-      } else if (insertAfter > -1) {
-        // we had some intersections before and should not check another ranges anymore
+      } else if (insertionIndex > -1) {
+        // we had some intersections or lesser ranges before and should not check another ranges anymore
         break;
       }
     }
 
-    if (insertInsteadOf > -1) {
-      this.collection.splice(insertInsteadOf, rangesToDelete, newRange);
+    if (insertionIndex > -1) {
+      this.collection.splice(insertionIndex, rangesToDelete, newRange);
     }
   }
 
