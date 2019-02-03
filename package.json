@@ -1,5 +1,10 @@
 {
   "name": "range-collection",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/jest": "^23.3.13",
     "jest": "^23.6.0",

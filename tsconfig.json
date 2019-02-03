@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "strict": true,
     "target": "es5",
-    "lib": ["es5", "es2015", "dom"],
-    "sourceMap": true
+    "module": "commonjs",
+    "outDir": "./dist",
+    "declaration": true,
+    "strict": true,
+    "lib": ["es6", "dom"]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist",
+    "src/**/*.spec.ts"
   ]
 }
